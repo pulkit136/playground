@@ -1,28 +1,42 @@
-# touched 2026-09-13T13:54:54.304018
-# touched 2026-09-13T13:54:54.406086
-# touched 2026-09-13T13:54:54.509110
-# touched 2026-09-13T13:54:55.393433
-# touched 2026-09-13T13:54:55.492880
-# touched 2026-09-13T13:54:55.611301
-# touched 2026-09-13T13:54:56.219222
-# touched 2026-09-13T13:54:57.125444
-# touched 2026-09-13T13:54:57.695610
-# touched 2026-09-13T13:54:58.187597
-# touched 2026-09-13T13:54:58.282358
-# touched 2026-09-13T13:54:58.584717
-# touched 2026-09-13T13:54:59.073702
-# touched 2026-09-13T13:54:59.174046
-# touched 2026-09-13T13:54:59.272534
-# touched 2026-09-13T13:54:59.364810
-# touched 2026-09-13T13:54:59.660462
-# touched 2026-09-13T13:55:00.051471
-# touched 2026-09-13T13:55:00.340680
-# touched 2026-09-13T13:55:00.638369
-# touched 2026-09-13T13:55:00.741525
-# touched 2026-09-13T13:55:01.484454
-# touched 2026-09-13T13:55:01.585129
-# touched 2026-09-13T13:55:02.421531
-# touched 2026-09-13T13:55:04.059681
-# touched 2026-09-13T13:55:04.151475
-# touched 2026-09-13T13:55:04.637223
-# touched 2026-09-13T13:55:07.379583
+"""Small helpers I keep re-writing in every project, so now they live here."""
+
+import time
+from datetime import datetime, timezone
+
+
+def slugify(text: str) -> str:
+    out = []
+    for ch in text.strip().lower():
+        if ch.isalnum():
+            out.append(ch)
+        elif out and out[-1] != "-":
+            out.append("-")
+    return "".join(out).strip("-")
+
+
+def chunked(items, size):
+    for i in range(0, len(items), size):
+        yield items[i:i + size]
+
+
+def retry(fn, attempts=3, delay=0.5, exceptions=(Exception,)):
+    last_err = None
+    for _ in range(attempts):
+        try:
+            return fn()
+        except exceptions as err:
+            last_err = err
+            time.sleep(delay)
+    raise last_err
+
+
+def utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def human_size(num: int) -> str:
+    for unit in ("B", "KB", "MB", "GB"):
+        if num < 1024:
+            return f"{num:.1f} {unit}"
+        num /= 1024
+    return f"{num:.1f} TB"
