@@ -1,24 +1,42 @@
-# touched 2026-09-13T13:54:54.103611
-# touched 2026-09-13T13:54:54.709924
-# touched 2026-09-13T13:54:55.100165
-# touched 2026-09-13T13:54:55.197588
-# touched 2026-09-13T13:54:55.748610
-# touched 2026-09-13T13:54:56.314759
-# touched 2026-09-13T13:54:56.930250
-# touched 2026-09-13T13:54:57.029391
-# touched 2026-09-13T13:54:57.795527
-# touched 2026-09-13T13:55:01.018796
-# touched 2026-09-13T13:55:01.296258
-# touched 2026-09-13T13:55:02.016973
-# touched 2026-09-13T13:55:02.322785
-# touched 2026-09-13T13:55:03.175782
-# touched 2026-09-13T13:55:03.678956
-# touched 2026-09-13T13:55:04.440814
-# touched 2026-09-13T13:55:04.742548
-# touched 2026-09-13T13:55:05.025309
-# touched 2026-09-13T13:55:05.298365
-# touched 2026-09-13T13:55:05.482686
-# touched 2026-09-13T13:55:05.689932
-# touched 2026-09-13T13:55:06.085016
-# touched 2026-09-13T13:55:06.794723
-# touched 2026-09-13T13:55:07.175498
+"""Thin wrapper around urllib with sane timeouts and JSON handling."""
+
+import json
+import urllib.error
+import urllib.request
+
+DEFAULT_TIMEOUT = 10  # seconds, got bitten by hanging requests before
+
+
+class ApiError(Exception):
+    def __init__(self, status, body):
+        super().__init__(f"HTTP {status}: {body[:200]}")
+        self.status = status
+        self.body = body
+
+
+def get(url, params=None, headers=None):
+    if params:
+        url = url + "?" + "&".join(f"{k}={v}" for k, v in params.items())
+    req = urllib.request.Request(url, headers=headers or {})
+    return _do(req)
+
+
+def post(url, data, headers=None):
+    payload = json.dumps(data).encode()
+    req = urllib.request.Request(
+        url, data=payload, method="POST",
+        headers={"Content-Type": "application/json", **(headers or {})},
+    )
+    return _do(req)
+
+
+def _do(req):
+    try:
+        with urllib.request.urlopen(req, timeout=DEFAULT_TIMEOUT) as resp:
+            body = resp.read().decode()
+            try:
+                return resp.status, json.loads(body)
+            except json.JSONDecodeError:
+                return resp.status, body
+    except urllib.error.HTTPError as err:
+        raise ApiError(err.code, err.read().decode()) from err
