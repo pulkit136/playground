@@ -1,24 +1,34 @@
-# touched 2026-09-13T13:54:54.203751
-# touched 2026-09-13T13:54:54.900737
-# touched 2026-09-13T13:54:56.035322
-# touched 2026-09-13T13:54:56.411340
-# touched 2026-09-13T13:54:56.618660
-# touched 2026-09-13T13:54:57.307219
-# touched 2026-09-13T13:54:57.588301
-# touched 2026-09-13T13:54:58.688554
-# touched 2026-09-13T13:54:59.860163
-# touched 2026-09-13T13:54:59.951728
-# touched 2026-09-13T13:55:00.437526
-# touched 2026-09-13T13:55:01.114158
-# touched 2026-09-13T13:55:01.820982
-# touched 2026-09-13T13:55:01.918587
-# touched 2026-09-13T13:55:02.629879
-# touched 2026-09-13T13:55:02.781944
-# touched 2026-09-13T13:55:04.251498
-# touched 2026-09-13T13:55:04.346396
-# touched 2026-09-13T13:55:05.118853
-# touched 2026-09-13T13:55:05.389488
-# touched 2026-09-13T13:55:05.893681
-# touched 2026-09-13T13:55:05.991385
-# touched 2026-09-13T13:55:06.279184
-# touched 2026-09-13T13:55:06.576153
+"""Little CLI that ties the utils together, mostly for manual poking."""
+
+import argparse
+import sys
+
+from src import api, utils
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(prog="playground")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    p_slug = sub.add_parser("slug", help="slugify some text")
+    p_slug.add_argument("text", nargs="+")
+
+    p_fetch = sub.add_parser("fetch", help="GET a URL and print JSON")
+    p_fetch.add_argument("url")
+
+    args = parser.parse_args(argv)
+
+    if args.cmd == "slug":
+        print(utils.slugify(" ".join(args.text)))
+    elif args.cmd == "fetch":
+        try:
+            status, body = api.get(args.url)
+            print(status, body)
+        except api.ApiError as err:
+            print(f"error: {err}", file=sys.stderr)
+            return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
