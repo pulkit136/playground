@@ -1,21 +1,32 @@
-# touched 2026-09-13T13:54:53.916573
-# touched 2026-09-13T13:54:54.607521
-# touched 2026-09-13T13:54:55.295555
-# touched 2026-09-13T13:54:55.849914
-# touched 2026-09-13T13:54:56.723149
-# touched 2026-09-13T13:54:57.399620
-# touched 2026-09-13T13:54:57.895666
-# touched 2026-09-13T13:54:58.094256
-# touched 2026-09-13T13:54:58.481487
-# touched 2026-09-13T13:54:58.881972
-# touched 2026-09-13T13:55:00.235432
-# touched 2026-09-13T13:55:00.531558
-# touched 2026-09-13T13:55:00.927246
-# touched 2026-09-13T13:55:02.123712
-# touched 2026-09-13T13:55:03.272291
-# touched 2026-09-13T13:55:03.560881
-# touched 2026-09-13T13:55:03.965084
-# touched 2026-09-13T13:55:05.789981
-# touched 2026-09-13T13:55:06.178631
-# touched 2026-09-13T13:55:06.984520
-# touched 2026-09-13T13:55:07.276826
+import pytest
+
+from src import utils
+
+
+def test_slugify_basic():
+    assert utils.slugify("Hello World!") == "hello-world"
+
+
+def test_slugify_strips_edges():
+    assert utils.slugify("  --foo bar--  ") == "foo-bar"
+
+
+def test_chunked_exact_split():
+    assert list(utils.chunked([1, 2, 3, 4], 2)) == [[1, 2], [3, 4]]
+
+
+def test_chunked_uneven():
+    assert list(utils.chunked([1, 2, 3], 2)) == [[1, 2], [3]]
+
+
+def test_human_size():
+    assert utils.human_size(500) == "500.0 B"
+    assert utils.human_size(2048) == "2.0 KB"
+
+
+def test_retry_gives_up():
+    def boom():
+        raise ValueError("nope")
+
+    with pytest.raises(ValueError):
+        utils.retry(boom, attempts=2, delay=0)
