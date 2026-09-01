@@ -1,25 +1,13 @@
-# touched 2026-09-13T13:54:54.011262
-# touched 2026-09-13T13:54:55.944805
-# touched 2026-09-13T13:54:56.131064
-# touched 2026-09-13T13:54:56.508435
-# touched 2026-09-13T13:54:56.827680
-# touched 2026-09-13T13:54:57.493155
-# touched 2026-09-13T13:54:57.996958
-# touched 2026-09-13T13:54:58.790180
-# touched 2026-09-13T13:54:58.977678
-# touched 2026-09-13T13:54:59.461616
-# touched 2026-09-13T13:54:59.552954
-# touched 2026-09-13T13:54:59.765072
-# touched 2026-09-13T13:55:00.146685
-# touched 2026-09-13T13:55:00.835205
-# touched 2026-09-13T13:55:01.207029
-# touched 2026-09-13T13:55:02.228388
-# touched 2026-09-13T13:55:02.522472
-# touched 2026-09-13T13:55:02.889111
-# touched 2026-09-13T13:55:03.083340
-# touched 2026-09-13T13:55:03.368260
-# touched 2026-09-13T13:55:03.780646
-# touched 2026-09-13T13:55:04.835243
-# touched 2026-09-13T13:55:05.210434
-# touched 2026-09-13T13:55:06.385046
-# touched 2026-09-13T13:55:06.692651
+# playground defaults, tweak locally if needed
+log_level: info
+timeout_seconds: 10
+retries: 3
+user_agent: playground/0.2
+
+fetch:
+  max_body_mb: 5
+  follow_redirects: true
+
+cache:
+  enabled: false
+  ttl_minutes: 15
