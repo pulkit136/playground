@@ -1,17 +1,13 @@
-# touched 2026-09-13T13:54:53.822317
-# touched 2026-09-13T13:54:54.805103
-# touched 2026-09-13T13:54:55.004991
-# touched 2026-09-13T13:54:57.215543
-# touched 2026-09-13T13:54:58.377117
-# touched 2026-09-13T13:55:01.390968
-# touched 2026-09-13T13:55:01.713555
-# touched 2026-09-13T13:55:02.989196
-# touched 2026-09-13T13:55:03.460939
-# touched 2026-09-13T13:55:03.874846
-# touched 2026-09-13T13:55:04.536185
-# touched 2026-09-13T13:55:04.934403
-# touched 2026-09-13T13:55:05.575484
-# touched 2026-09-13T13:55:06.480204
-# touched 2026-09-13T13:55:06.892807
-# touched 2026-09-13T13:55:07.081612
-# touched 2026-09-13T13:55:07.478323
+# playground
+
+A personal playground for small Python experiments and reusable helpers.
+
+Not meant to be useful to anyone but me — mostly utilities I keep
+copy-pasting between projects (`src/utils.py`), a tiny stdlib-only HTTP
+wrapper (`src/api.py`), and a scratch CLI (`src/main.py`).
+
+Run the tests with:
+
+```bash
+python -m pytest
+```
